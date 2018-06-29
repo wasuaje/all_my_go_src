@@ -1,0 +1,22 @@
+
+GIT_REPO_HOST   = "stash-prod1.us.jpmchase.net"
+GIT_REPO_PORT   = "8443"
+GIT_CI_USER     =  "f515742"
+GIT_CI_PASSWORD = "test123"
+GIT_ROOT_PROJECT_NAME= "efp"
+FUNCTIONAL_UNIX_ACCOUNT="efp"
+GFS_COLLECTION_NAME="efp"
+RELEASE_REPO_NAME="efp-release"
+GFS_USER        ="E786950"
+GFS_PASSWORD    ="s8WqXcUC"
+PROJECT_SEAL_ID ="34449"
+MAVEN_GROUP_ID  ="com.jpmorgan.ib.efp"
+THIRDPARTY_DIR="/local/apps/gpb/pbapps/EFP/thirdparty"
+GROUP_DEPLOYMENT_EMAIL="efp-deployment-status@restricted.chase.com"
+PROD_DEPLOYMENT_EMAIL="efp-prod-deployment@restricted.chase.com"
+JSTACK="local/apps/gpb/pbapps/EFP/thirdparty/java7/bin/jstack"
+SUPER_SECRET_SECURE_CONFIG_FILE="/local/apps/gpb/pbapps/secure/dev3.secure.cfg"
+
+
+
+

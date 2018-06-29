@@ -1,0 +1,1086 @@
+{
+  "applications": [
+    {
+      "name"            : "referencedata",
+      "start-order"     : "1",
+      "stop-order"      : "17",
+
+      "child-processes" : ["referencedata-locator", "referencedata-server", "referencedata-server-secondary",
+        "referencedata-realtime-loaders", "referencedata-product-search"],
+
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "referencedata"
+    },
+    {
+      "name"            : "referencedata-server",
+      "start-order"     : "3",
+      "stop-order"      : "16",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-server/bin/referencedata-server.sh start",
+      "stop"            : "{ENV_HOME}/applications/referencedata-server/bin/referencedata-server.sh stop",
+      "check"           : "ps -A -o pid,cmd | grep java | grep {ENV_NAME} | grep com.jpmorgan.ib.efp.referencedata.server.Main | grep -v grep | awk '{print $1}'",
+      "app-group"       : "referencedata-server"
+    },
+    {
+      "name"            : "referencedata-server-secondary",
+      "start-order"     : "2",
+      "stop-order"      : "15",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-server/bin/referencedata-server.sh start --secondary",
+      "stop"            : "{ENV_HOME}/applications/referencedata-server/bin/referencedata-server.sh stop --secondary",
+      "check"           : "ps -A -o pid,cmd | grep java | grep {ENV_NAME} | grep com.jpmorgan.ib.efp.referencedata.server.Main | grep -v grep | awk '{print $1}'",
+      "app-group"       : "referencedata-secondary"
+    },
+    {
+      "name"            : "referencedata-locator",
+      "start-order"     : "0",
+      "stop-order"      : "14",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-server/bin/unix.locator.sh start {ENV}",
+      "stop"            : "{ENV_HOME}/applications/referencedata-server/bin/unix.locator.sh stop {ENV}",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep com.gemstone.gemfire.internal.DistributionLocator | grep 51112 | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "referencedata-locator"
+    },
+    {
+      "name"            : "referencedata-realtime-loaders",
+      "start-order"     : "4",
+      "stop-order"      : "13",
+
+      "child-processes" : ["instrument-equity-listener", "instrument-abs-listener", "instrument-muni-listener",
+        "instrument-debt-listener", "accountUcadListener"],
+
+      "start"           : "",
+      "stop"            : "",
+      "app-group"       : "referencedata-realtime-loaders"
+    },
+    {
+      "name"            : "instrument-equity-listener",
+      "start-order"     : "5",
+      "stop-order"      : "12",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-loader/bin/runJmsListener.bash unblock {ENV} instrument-equity-listener",
+      "stop"            : "{ENV_HOME}/applications/referencedata-loader/bin/runJmsListener.bash block {ENV} instrument-equity-listener",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep referencedata-loader | grep instrument-equity-listener | awk '{ print $2 }'",
+      "app-group"       : "referencedata-realtime-loaders"
+    },
+    {
+      "name"            : "instrument-abs-listener",
+      "start-order"     : "6",
+      "stop-order"      : "11",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-loader/bin/runJmsListener.bash unblock {ENV} instrument-abs-listener",
+      "stop"            : "{ENV_HOME}/applications/referencedata-loader/bin/runJmsListener.bash block {ENV} instrument-abs-listener",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep referencedata-loader | grep instrument-abs-listener | awk '{ print $2 }'",
+      "app-group"       : "referencedata-realtime-loaders"
+    },
+    {
+      "name"            : "instrument-muni-listener",
+      "start-order"     : "7",
+      "stop-order"      : "10",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-loader/bin/runJmsListener.bash unblock {ENV} instrument-muni-listener",
+      "stop"            : "{ENV_HOME}/applications/referencedata-loader/bin/runJmsListener.bash block {ENV} instrument-muni-listener",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep referencedata-loader | grep instrument-muni-listener | awk '{ print $2 }'",
+      "app-group"       : "referencedata-realtime-loaders"
+    },
+    {
+      "name"            : "instrument-debt-listener",
+      "start-order"     : "8",
+      "stop-order"      : "9",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-loader/bin/runJmsListener.bash unblock {ENV} instrument-debt-listener",
+      "stop"            : "{ENV_HOME}/applications/referencedata-loader/bin/runJmsListener.bash block {ENV} instrument-debt-listener",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep referencedata-loader | grep instrument-debt-listener | awk '{ print $2 }'",
+      "app-group"       : "referencedata-realtime-loaders"
+    },
+    {
+      "name"            : "accountUcadListener",
+      "start-order"     : "9",
+      "stop-order"      : "8",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-loader/bin/accountUcadListener.bash unblock {ENV}",
+      "stop"            : "{ENV_HOME}/applications/referencedata-loader/bin/accountUcadListener.bash block {ENV}",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep referencedata-loader | grep account-ucad-listener | awk '{ print $2 }'",
+      "app-group"       : "referencedata-realtime-loaders"
+    },
+    {
+      "name"            : "referencedata-product-search",
+      "start-order"     : "10",
+      "stop-order"      : "7",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-server/bin/runProductSearch.bash unblock {ENV}",
+      "stop"            : "{ENV_HOME}/applications/referencedata-server/bin/runProductSearch.bash block {ENV}",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep referencedata-server | grep product-search-main | awk '{ print $2 }'",
+      "app-group"       : "referencedata-product-search"
+    },
+    {
+      "name"            : "contract-service-etl",
+      "start-order"     : "11",
+      "stop-order"      : "6",
+      "child-processes" : [],
+      "start"           : "/local/apps/gpb/pbapps/EFP/{ENV}/applications/contract-service-etl-intraday/scripts/contract-service-etl-intraday.sh unhold",
+      "stop"            : "/local/apps/gpb/pbapps/EFP/{ENV}/applications/contract-service-etl-intraday/scripts/contract-service-etl-intraday.sh hold",
+      "check"           : "ps -ef | grep java | grep contract-service-etl-intraday | grep -v grep | awk '{print $2}'",
+      "app-group"       : "contract-service"
+    },
+    {
+      "name"            : "default",
+      "start-order"     : "12",
+      "stop-order"      : "5",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-container default",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-container default",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep tomcat | grep default | awk '{ print $2 }'",
+      "app-group"       : "tomcat-default"
+    },
+    {
+      "name"            : "coreServices",
+      "start-order"     : "13",
+      "stop-order"      : "4",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-container coreServices",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-container coreServices",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep tomcat | grep coreServices | awk '{ print $2 }'",
+      "app-group"       : "tomcat-core"
+    },
+    {
+      "name"            : "collateralManagement",
+      "start-order"     : "14",
+      "stop-order"      : "3",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-container collateralManagement",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-container collateralManagement",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep tomcat | grep collateralManagement | awk '{ print $2 }'",
+      "app-group"       : "tomcat-collateral"
+    },
+    {
+      "name"            : "trading",
+      "start-order"     : "15",
+      "stop-order"      : "2",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-container trading",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-container trading",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep tomcat | grep trading | awk '{ print $2 }'",
+      "app-group"       : "tomcat-trading"
+    },
+    {
+      "name"            : "postTrading",
+      "start-order"     : "16",
+      "stop-order"      : "1",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-container postTrading",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-container postTrading",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep tomcat | grep postTrading | awk '{ print $2 }'",
+      "app-group"       : "tomcat-post-trading"
+    },
+    {
+      "name"            : "tomcat",
+      "start-order"     : "17",
+      "stop-order"      : "0",
+
+      "child-processes" : ["postTrading", "trading", "collateralManagement", "coreServices", "default"],
+
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "tomcat"
+    },
+    {
+      "name"            : "gpm",
+      "start-order"     : "18",
+      "stop-order"      : "18",
+      "child-processes" : ["position-service", "grips", "grips-locator", "gpm-realtime"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "gpm"
+    },
+    {
+      "name"            : "position-service",
+      "start-order"     : "19",
+      "stop-order"      : "19",
+      "child-processes" : ["position-service-server", "grips-executor-outbound"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "position-service"
+    },
+    {
+      "name"            : "position-service-server",
+      "start-order"     : "20",
+      "stop-order"      : "20",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application position-service-server position-service-server.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application position-service-server position-service-server.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep position-service-server | awk '{ print $2 }'",
+      "app-group"       : "position-service"
+    },
+    {
+      "name"            : "grips-executor-outbound",
+      "start-order"     : "21",
+      "stop-order"      : "21",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-executor-outbound-na-app unix.amer.outbound-executor.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-executor-outbound-na-app unix.amer.outbound-executor.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep grips-executor-outbound | awk '{ print $2 }'",
+      "app-group"       : "position-service"
+    },
+    {
+      "name"            : "grips-locator",
+      "start-order"     : "22",
+      "stop-order"      : "22",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-storage-na-app unix.amer.locator.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-storage-na-app unix.amer.locator.sh",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep com.gemstone.gemfire.internal.DistributionLocator | grep 8885 | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "grips-locator"
+    },
+    {
+      "name"            : "grips",
+      "start-order"     : "23",
+      "stop-order"      : "23",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-connectors unix.grips-cluster.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-connectors unix.grips-cluster.sh --options --force",
+      "check"           : "",
+      "app-group"       : "grips-connectors"
+    },
+    {
+      "name"            : "gpm-realtime",
+      "start-order"     : "24",
+      "stop-order"      : "24",
+      "child-processes" : ["grips-adapter-sbl-contracts-gpm", "grips-adapter-sbl-collateral-gpm",
+        "grips-adapter-trep-depo-rt", "grips-adapter-sbl-depot-positions",
+        "grips-adapter-dtc-positions", "grips-adapter-dtc-pendingtransactions",
+        "activity-service-cage3-rt", "position-service-realtime-publisher",
+        "grips-adapter-trep-depo-scheduled"],
+      "start"           : "",
+      "stop"            : "",
+      "app-group"       : "gpm-realtime"
+    },
+    {
+      "name"            : "grips-adapter-sbl-contracts-gpm",
+      "start-order"     : "25",
+      "stop-order"      : "25",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-adapter-sbl-contracts-gpm unix.sbl-contracts-rt-adapter.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-adapter-sbl-contracts-gpm unix.sbl-contracts-rt-adapter.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep grips-adapter-sbl-contracts-gpm | grep realtime | awk '{ print $2 }'",
+      "app-group"       : "gpm-realtime"
+    },
+    {
+      "name"            : "grips-adapter-sbl-collateral-gpm",
+      "start-order"     : "26",
+      "stop-order"      : "26",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-adapter-sbl-collateral-gpm unix.sbl-collateral-gpm-rt-adapter.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-adapter-sbl-collateral-gpm unix.sbl-collateral-gpm-rt-adapter.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep grips-adapter-sbl-collateral-gpm | grep realtime | awk '{ print $2 }'",
+      "app-group"       : "gpm-realtime"
+    },
+    {
+      "name"            : "grips-adapter-trep-depo-rt",
+      "start-order"     : "27",
+      "stop-order"      : "27",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-adapter-trep-depo-rt unix.trep-depo-rt-adapter.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-adapter-trep-depo-rt unix.trep-depo-rt-adapter.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep grips-adapter-trep-depo-rt | awk '{ print $2 }'",
+      "app-group"       : "gpm-realtime"
+    },
+    {
+      "name"            : "grips-adapter-sbl-depot-positions",
+      "start-order"     : "28",
+      "stop-order"      : "28",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-adapter-sbl-depot-positions unix.sbl-depot-positions-start-adapter.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-adapter-sbl-depot-positions unix.sbl-depot-positions-stop-adapter.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep grips-adapter-sbl-depot-positions | awk '{ print $2 }'",
+      "app-group"       : "gpm-realtime"
+    },
+    {
+      "name"            : "grips-adapter-dtc-pendingtransactions",
+      "start-order"     : "29",
+      "stop-order"      : "29",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-adapter-dtc-pendingtransactions unix.dtc-pendingtransactions-adapter-rt.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-adapter-dtc-pendingtransactions unix.dtc-pendingtransactions-adapter-rt.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep grips-adapter-dtc-pendingtransactions | grep realtime | awk '{ print $2 }'",
+      "app-group"       : "gpm-realtime"
+    },
+    {
+      "name"            : "grips-adapter-dtc-positions",
+      "start-order"     : "30",
+      "stop-order"      : "30",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-adapter-dtc-positions unix.dtc-positions-adapter-rt.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-adapter-dtc-positions unix.dtc-positions-adapter-rt.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep grips-adapter-dtc-positions | grep realtime | awk '{ print $2 }'",
+      "app-group"       : "gpm-realtime"
+    },
+    {
+      "name"            : "activity-service-cage3-rt",
+      "start-order"     : "31",
+      "stop-order"      : "31",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application activity-service-cage3-rt unix.activity-service-cage3-rt.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application activity-service-cage3-rt unix.activity-service-cage3-rt.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep activity-service-cage3-rt | grep realtime | awk '{ print $2 }'",
+      "app-group"       : "gpm-realtime"
+    },
+    {
+      "name"            : "position-service-realtime-publisher",
+      "start-order"     : "32",
+      "stop-order"      : "32",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application position-service-realtime-publisher unix.realtime-publisher.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application position-service-realtime-publisher unix.realtime-publisher.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep GPM_REALTIME_PUBLISHER | awk '{ print $2 }'",
+      "app-group"       : "gpm-realtime"
+    },
+    {
+      "name"            : "grips-adapter-trep-depo-scheduled",
+      "start-order"     : "33",
+      "stop-order"      : "33",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-adapter-trep-depo-rt unix.trep-depo-scheduled-adapter.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-adapter-trep-depo-rt unix.trep-depo-scheduled-adapter.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep GPM_TREP_DEPO_SCHEDULED | awk '{ print $2 }'",
+      "app-group"       : "gpm-realtime"
+    },
+    {
+      "name"            : "loanet-gateway",
+      "start-order"     : "34",
+      "stop-order"      : "34",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application loanet-gateway-service spring-boot-app.sh --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application loanet-gateway-service spring-boot-app.sh --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep loanet-gateway-service' ' | awk '{ print $2 }'",
+      "app-group"       : "loanet-gateway"
+    },
+    {
+      "name"            : "grm",
+      "start-order"     : "35",
+      "stop-order"      : "35",
+      "child-processes" : ["rates-locator", "rates-cache-server", "rates-app-server", "rates-event-container"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "grm"
+    },
+    {
+      "name"            : "rates-locator",
+      "start-order"     : "36",
+      "stop-order"      : "36",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application rates-management-service rates-locator.sh --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application rates-management-service rates-locator.sh --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep rates-management-locator | awk '{ print $2 }'",
+      "app-group"       : "grm"
+    },
+    {
+      "name"            : "rates-cache-server",
+      "start-order"     : "37",
+      "stop-order"      : "37",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application rates-management-service rates-cache-server.sh --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application rates-management-service rates-cache-server.sh --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep com.jpmorgan.ib.efp.rates.cache.main.CacheServerBaseProcess | awk '{ print $2 }'",
+      "app-group"       : "grm"
+    },
+    {
+      "name"            : "rates-app-server",
+      "start-order"     : "38",
+      "stop-order"      : "38",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application rates-management-service rates-app-server.sh --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application rates-management-service rates-app-server.sh --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep rates-management-server | awk '{ print $2 }'",
+      "app-group"       : "grm"
+    },
+    {
+      "name"            : "jms-multicaster",
+      "start-order"     : "39",
+      "stop-order"      : "39",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application jms-multicaster --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application jms-multicaster --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep com.jpmorgan.sbl.jms.JMSMulticaster | awk '{ print $2 }'",
+      "app-group"       : "jms-multicaster"
+    },
+    {
+      "name"            : "loanet-gateway-0352",
+      "start-order"     : "40",
+      "stop-order"      : "40",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application loanet-gateway-service-0352 spring-boot-app.sh --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application loanet-gateway-service-0352 spring-boot-app.sh --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep loanet-gateway-service-0352 | awk '{ print $2 }'",
+      "app-group"       : "loanet-gateway"
+    },
+    {
+      "name"            : "efp-history-service",
+      "start-order"     : "41",
+      "stop-order"      : "41",
+      "child-processes" : ["efp-history-service-activity-capture", "efp-history-service-query"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "efp-history-service"
+    },
+    {
+      "name"            : "efp-history-service-activity-capture",
+      "start-order"     : "42",
+      "stop-order"      : "42",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-history-service-activity-capture --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-history-service-activity-capture --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-history-service-activity-capture | awk '{ print $2 }'",
+      "app-group"       : "efp-history-service"
+    },
+    {
+      "name"            : "efp-history-service-query",
+      "start-order"     : "43",
+      "stop-order"      : "43",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-history-service-query --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-history-service-query --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-history-service-query | awk '{ print $2 }'",
+      "app-group"       : "efp-history-service"
+    },
+    {
+      "name"            : "fpl",
+      "start-order"     : "44",
+      "stop-order"      : "44",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application fpl fpl-listener.sh --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application fpl fpl-listener.sh --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep FPLNotificationServerInvoker | awk '{print $2}'",
+      "app-group"       : "fpl"
+    },
+    {
+      "name"            : "depot-management",
+      "start-order"     : "45",
+      "stop-order"      : "45",
+      "child-processes" : ["grips-locator-dm","depot-management-rest",
+        "depot-management-napoli-rt-activity-adapter-rest", "depot-management-napoli-rt-grips-adapter-rest"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "depot-management"
+    },
+    {
+      "name"            : "grips-locator-dm",
+      "start-order"     : "46",
+      "stop-order"      : "46",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-storage-na-app unix.dm.locator.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-storage-na-app unix.dm.locator.sh",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep com.gemstone.gemfire.internal.DistributionLocator | grep 8885 | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "grips-locator-dm"
+    },
+    {
+      "name"            : "grips-dm",
+      "start-order"     : "47",
+      "stop-order"      : "47",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-connectors unix.dm.grips-cluster.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-connectors unix.dm.grips-cluster.sh --options --force",
+      "check"           : "",
+      "app-group"       : "grips-connectors-dm"
+    },
+    {
+      "name"            : "depot-management-rest",
+      "start-order"     : "48",
+      "stop-order"      : "48",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application depot-management-rest spring-boot-app.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application depot-management-rest spring-boot-app.sh --options --force",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep depot-management-rest | awk '{ print $2 }'",
+      "app-group"       : "depot-management"
+    },
+    {
+      "name"            : "depot-management-napoli-rt-activity-adapter-rest",
+      "start-order"     : "49",
+      "stop-order"      : "49",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application depot-management-napoli-rt-activity-adapter-rest spring-boot-app.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application depot-management-napoli-rt-activity-adapter-rest spring-boot-app.sh",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep depot-management-napoli-rt-activity-adapter-rest | awk '{ print $2 }'",
+      "app-group"       : "depot-management"
+    },
+    {
+      "name"            : "depot-management-napoli-rt-grips-adapter-rest",
+      "start-order"     : "50",
+      "stop-order"      : "50",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application depot-management-napoli-rt-grips-adapter-rest spring-boot-app.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application depot-management-napoli-rt-grips-adapter-rest spring-boot-app.sh",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep depot-management-napoli-rt-grips-adapter-rest | awk '{ print $2 }'",
+      "app-group"       : "depot-management"
+    },
+    {
+      "name"            : "elk",
+      "start-order"     : "51",
+      "stop-order"      : "51",
+      "child-processes" : ["janus", "elasticsearch", "kibana", "logstash-consumer", "logstash-producer", "logstash-mirror", "logstash"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "elk"
+    },
+    {
+      "name"            : "janus",
+      "start-order"     : "52",
+      "stop-order"      : "52",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-elk janus.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-elk janus.sh",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep com.jpmorgan.janus.webagent.server.JanusEntitlementServer | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "janus"
+    },
+    {
+      "name"            : "apache",
+      "start-order"     : "53",
+      "stop-order"      : "53",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-apache",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-apache",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep efp-apache | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "apache"
+    },
+    {
+      "name"            : "elasticsearch",
+      "start-order"     : "54",
+      "stop-order"      : "54",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-elk elasticsearch.sh --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-elk elasticsearch.sh --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep elasticsearch | grep -v elasticsearch.sh | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "elasticsearch"
+    },
+    {
+      "name"            : "kibana",
+      "start-order"     : "55",
+      "stop-order"      : "55",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-elk kibana.sh --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-elk kibana.sh --block",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep node | grep kibana | grep -v kibana.sh | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "kibana"
+    },
+    {
+      "name"            : "logstash",
+      "start-order"     : "56",
+      "stop-order"      : "56",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-elk logstash.sh",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-elk logstash.sh",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep logstash | grep -v logstash.sh | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "logstash"
+    },
+    {
+      "name"            : "logstash-producer",
+      "start-order"     : "57",
+      "stop-order"      : "57",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-elk logstash.sh --unblock -opts producer",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-elk logstash.sh --block -opts producer",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep logstash | grep -v logstash.sh | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "logstash-producer"
+    },
+    {
+      "name"            : "logstash-consumer",
+      "start-order"     : "58",
+      "stop-order"      : "58",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-elk logstash.sh --unblock -opts consumer",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-elk logstash.sh --block -opts consumer",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep logstash | grep -v logstash.sh | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "logstash-consumer"
+    },
+    {
+      "name"            : "logstash-mirror",
+      "start-order"     : "59",
+      "stop-order"      : "59",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-elk logstash.sh --unblock -opts mirror",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-elk logstash.sh --block -opts mirror",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep logstash | grep -v logstash.sh | grep -v grep | awk '{ print $2 }'",
+      "app-group"       : "logstash-mirror"
+    },
+    {
+      "name"            : "collateral-schedules-rest",
+      "start-order"     : "60",
+      "stop-order"      : "60",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application collateral-schedules-rest spring-boot-app.sh --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application collateral-schedules-rest spring-boot-app.sh --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep collateral-schedules-rest | awk '{ print $2 }'",
+      "app-group"       : "collateral-schedules"
+    },
+    {
+      "name"            : "etp-lifecycle-manager",
+      "start-order"     : "61",
+      "stop-order"      : "61",
+      "child-processes" : ["etp-lifecycle-manager-trade-service"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "etp-lifecycle-manager"
+    },
+    {
+      "name"            : "etp-lifecycle-manager-trade-service",
+      "start-order"     : "62",
+      "stop-order"      : "62",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application etp-lifecycle-manager-trade-service --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application etp-lifecycle-manager-trade-service --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep etp-lifecycle-manager-trade-service | awk '{ print $2 }'",
+      "app-group"       : "etp-lifecycle-manager"
+    },
+    {
+      "name"            : "contract-event-gateway",
+      "start-order"     : "63",
+      "stop-order"      : "63",
+      "child-processes" : ["contract-event-gateway-settlement", "contract-event-gateway-server"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "contract-event-gateway"
+    },
+    {
+      "name"            : "contract-event-gateway-settlement",
+      "start-order"     : "64",
+      "stop-order"      : "64",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application contract-event-gateway-settlement unix.contract-event-gateway-settlement.sh --unblock --options 6546",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application contract-event-gateway-settlement unix.contract-event-gateway-settlement.sh --block --options 6546",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep contract-event-gateway-settlement | awk '{ print $2 }'",
+      "app-group"       : "contract-event-gateway"
+    },
+    {
+      "name"            : "contract-event-gateway-server",
+      "start-order"     : "65",
+      "stop-order"      : "65",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application contract-event-gateway-server unix.contract-event-gateway.sh --unblock --options 6526",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application contract-event-gateway-server unix.contract-event-gateway.sh --block --options 6526",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep contract-event-gateway-server | awk '{ print $2 }'",
+      "app-group"       : "contract-event-gateway"
+    },
+    {
+      "name"            : "bus-stop",
+      "start-order"     : "66",
+      "stop-order"      : "66",
+      "child-processes" : ["bus-stop-instance-1", "bus-stop-instance-2"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "bus-stop"
+    },
+    {
+      "name"            : "bus-stop-instance-1",
+      "start-order"     : "67",
+      "stop-order"      : "67",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application bus-stop unix.bus-stop.sh --unblock --options 6536",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application bus-stop unix.bus-stop.sh --block --options 6536",
+      "check"           : "ps -ef | grep java | grep qa2 | grep bus-stop | grep 6536 | awk '{ print $2 }'",
+      "app-group"       : "bus-stop"
+    },
+    {
+      "name"            : "bus-stop-instance-2",
+      "start-order"     : "68",
+      "stop-order"      : "68",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application bus-stop unix.bus-stop.sh --unblock --options 6537",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application bus-stop unix.bus-stop.sh --block --options 6537",
+      "check"           : "ps -ef | grep java | grep qa2 | grep bus-stop | grep 6537 | awk '{ print $2 }'",
+      "app-group"       : "bus-stop"
+    },
+    {
+      "name"            : "zookeeper",
+      "start-order"     : "69",
+      "stop-order"      : "69",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-zookeeper --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-zookeeper --block",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep zookeeper | grep -v grep | grep -v zookeeper.sh | awk '{ print $2 }'",
+      "app-group"       : "zookeeper"
+    },
+    {
+      "name"            : "kafka-datalake",
+      "start-order"     : "70",
+      "stop-order"      : "70",
+      "child-processes" : ["kafka-datalake-server", "kafka-datalake-mirror"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "kafka-datalake"
+    },
+    {
+      "name"            : "kafka-datalake-server",
+      "start-order"     : "71",
+      "stop-order"      : "71",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-kafka-datalake --unblock -opts server",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-kafka-datalake --block -opts server",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep efp-kafka-datalake | grep kafka.Kafka | grep -v grep | grep -v kafka-server.sh | awk '{ print $2 }'",
+      "app-group"       : "kafka-datalake-server"
+    },
+    {
+      "name"            : "kafka-datalake-mirror",
+      "start-order"     : "72",
+      "stop-order"      : "72",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-kafka-datalake -opts mirror unhold",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-kafka-datalake -opts mirror hold",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep efp-kafka-datalake | grep kafka.tools.MirrorMaker | grep -v grep | grep -v kafka-mirror.sh | awk '{ print $2 }'",
+      "app-group"       : "kafka-datalake-mirror"
+    },
+    {
+      "name"            : "kafka-elk",
+      "start-order"     : "73",
+      "stop-order"      : "73",
+      "child-processes" : ["kafka-elk-server", "kafka-elk-mirror"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "kafka-elk"
+    },
+    {
+      "name"            : "kafka-elk-server",
+      "start-order"     : "74",
+      "stop-order"      : "74",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-kafka-elk --unblock -opts server",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-kafka-elk --block -opts server",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep efp-kafka-elk | grep kafka.Kafka | grep -v grep | grep -v kafka-server.sh | awk '{ print $2 }'",
+      "app-group"       : "kafka-elk-server"
+    },
+    {
+      "name"            : "kafka-elk-mirror",
+      "start-order"     : "75",
+      "stop-order"      : "75",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-kafka-elk -opts mirror unhold",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-kafka-elk -opts mirror hold",
+      "check"           : "ps -ef | grep {ENV_NAME} | grep efp-kafka-elk | grep kafka.tools.MirrorMaker | grep -v grep | grep -v kafka-mirror.sh | awk '{ print $2 }'",
+      "app-group"       : "kafka-elk-mirror"
+    },
+    {
+      "name"            : "efp-etp-query-service",
+      "start-order"     : "76",
+      "stop-order"      : "76",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-etp-query-service --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-etp-query-service --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-etp-query-service | awk '{ print $2 }'",
+      "app-group"       : "efp-etp-query-service"
+    },
+    {
+      "name"            : "order-service",
+      "start-order"     : "77",
+      "stop-order"      : "77",
+      "child-processes" : ["order-service-rest", "order-service-query"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "order-service"
+    },
+    {
+      "name"            : "order-service-rest",
+      "start-order"     : "78",
+      "stop-order"      : "78",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application order-service-rest --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application order-service-rest --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep order-service-rest | awk '{ print $2 }'",
+      "app-group"       : "order-service"
+    },
+    {
+      "name"            : "order-service-query",
+      "start-order"     : "79",
+      "stop-order"      : "79",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application order-service-query --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application order-service-query --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep order-service-query | awk '{ print $2 }'",
+      "app-group"       : "order-service"
+    },
+    {
+      "name"            : "collateral-booking-service-server",
+      "start-order"     : "80",
+      "stop-order"      : "80",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application collateral-booking-service-server --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application collateral-booking-service-server --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep collateral-booking-service-server | awk '{ print $2 }'",
+      "app-group"       : "collateral-booking-service"
+    },
+    {
+      "name"            : "accrual-service-service",
+      "start-order"     : "81",
+      "stop-order"      : "81",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application accrual-service-service --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application accrual-service-service --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep accrual-service-service | awk '{ print $2 }'",
+      "app-group"       : "accrual-service"
+    },
+    {
+      "name"            : "loanetGateway",
+      "start-order"     : "82",
+      "stop-order"      : "82",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application loanetGateway --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application loanetGateway --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep loanetGateway | awk '{ print $2 }'",
+      "app-group"       : "loanetGateway"
+    },
+    {
+      "name"            : "grips-filter-sbl-contracts",
+      "start-order"     : "83",
+      "stop-order"      : "83",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application grips-filter-sbl-contracts --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application grips-filter-sbl-contracts --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep grips-filter-sbl-contracts | awk '{ print $2 }'",
+      "app-group"       : "grips-contracts"
+    },
+    {
+      "name"            : "efp-datastore-service",
+      "start-order"     : "84",
+      "stop-order"      : "84",
+      "child-processes" : ["efp-datastore-contract-events-ingestion","efp-datastore-query-service"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "efp-datastore-service"
+    },
+    {
+      "name"            : "efp-datastore-contract-events-ingestion",
+      "start-order"     : "85",
+      "stop-order"      : "85",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-datastore-contract-events-ingestion --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-datastore-contract-events-ingestion --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-datastore-contract-events-ingestion | awk '{ print $2 }'",
+      "app-group"       : "efp-datastore-service"
+    },
+    {
+      "name"            : "efp-datastore-refdata",
+      "start-order"     : "86",
+      "stop-order"      : "86",
+      "child-processes" : ["efp-datastore-refdata-batch-consumer","efp-datastore-refdata-composite-consumer","efp-datastore-refdata-instrument-consumer","efp-datastore-refdata-instrument-publisher","efp-datastore-refdata-price-consumer","efp-datastore-refdata-price-publisher"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "efp-datastore-refdata"
+    },
+    {
+      "name"            : "efp-datastore-refdata-batch-consumer",
+      "start-order"     : "87",
+      "stop-order"      : "87",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-datastore-refdata-batch-consumer --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-datastore-refdata-batch-consumer --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-datastore-refdata-batch-consumer | awk '{ print $2 }'",
+      "app-group"       : "efp-datastore-refdata"
+    },
+    {
+      "name"            : "efp-datastore-refdata-composite-consumer",
+      "start-order"     : "88",
+      "stop-order"      : "88",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-datastore-refdata-composite-consumer --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-datastore-refdata-composite-consumer --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-datastore-refdata-composite-consumer | awk '{ print $2 }'",
+      "app-group"       : "efp-datastore-refdata"
+    },
+    {
+      "name"            : "efp-datastore-refdata-instrument-consumer",
+      "start-order"     : "89",
+      "stop-order"      : "89",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-datastore-refdata-instrument-consumer --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-datastore-refdata-instrument-consumer --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-datastore-refdata-instrument-consumer | awk '{ print $2 }'",
+      "app-group"       : "efp-datastore-refdata"
+    },
+    {
+      "name"            : "efp-datastore-refdata-instrument-publisher",
+      "start-order"     : "90",
+      "stop-order"      : "90",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-datastore-refdata-instrument-publisher --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-datastore-refdata-instrument-publisher --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-datastore-refdata-instrument-publisher | awk '{ print $2 }'",
+      "app-group"       : "efp-datastore-refdata"
+    },
+    {
+      "name"            : "efp-datastore-refdata-price-consumer",
+      "start-order"     : "91",
+      "stop-order"      : "91",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-datastore-refdata-price-consumer --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-datastore-refdata-price-consumer --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-datastore-refdata-price-consumer | awk '{ print $2 }'",
+      "app-group"       : "efp-datastore-refdata"
+    },
+    {
+      "name"            : "efp-datastore-refdata-price-publisher",
+      "start-order"     : "92",
+      "stop-order"      : "92",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-datastore-refdata-price-publisher --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-datastore-refdata-price-publisher --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-datastore-refdata-price-publisher | awk '{ print $2 }'",
+      "app-group"       : "efp-datastore-refdata"
+    },
+    {
+      "name"            : "collateral-booking-service-rest",
+      "start-order"     : "93",
+      "stop-order"      : "93",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application collateral-booking-service-rest --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application collateral-booking-service-rest --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep collateral-booking-service-rest | awk '{ print $2 }'",
+      "app-group"       : "collateral-booking-service"
+    },
+    {
+      "name"            : "efp-finance",
+      "start-order"     : "94",
+      "stop-order"      : "94",
+      "child-processes" : ["loanet-accrual-processor-rest","efp-accrual-service-rest","efp-billing-rest", "efp-billing-compare-rest"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "efp-finance"
+    },
+    {
+      "name"            : "loanet-accrual-processor-rest",
+      "start-order"     : "95",
+      "stop-order"      : "95",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application loanet-accrual-processor-rest --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application loanet-accrual-processor-rest --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep loanet-accrual-processor-rest | awk '{ print $2 }'",
+      "app-group"       : "efp-finance"
+    },
+    {
+      "name"            : "efp-accrual-service-rest",
+      "start-order"     : "96",
+      "stop-order"      : "96",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-accrual-service-rest --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-accrual-service-rest --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-accrual-service-rest | awk '{ print $2 }'",
+      "app-group"       : "efp-finance"
+    },
+    {
+      "name"            : "efp-billing-rest",
+      "start-order"     : "97",
+      "stop-order"      : "97",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-billing-rest --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-billing-rest --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-billing-rest | awk '{ print $2 }'",
+      "app-group"       : "efp-finance"
+    },
+    {
+      "name"            : "efp-billing-compare-rest",
+      "start-order"     : "98",
+      "stop-order"      : "98",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-billing-compare-rest --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-billing-compare-rest --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-billing-compare-rest | awk '{ print $2 }'",
+      "app-group"       : "efp-finance"
+    },
+    {
+      "name"            : "efp-incoming-receipts",
+      "start-order"     : "99",
+      "stop-order"      : "99",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-incoming-receipts --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-incoming-receipts --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-incoming-receipts | awk '{ print $2 }'",
+      "app-group"       : "efp-incoming-receipts"
+    },
+    {
+      "name"            : "rates-event-container",
+      "start-order"     : "100",
+      "stop-order"      : "100",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application rates-management-service rates-event-container.sh --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application rates-management-service rates-event-container.sh --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep rates-management-event | awk '{ print $2 }'",
+      "app-group"       : "grm"
+    },
+    {
+      "name"            : "efp-datastore-query-service",
+      "start-order"     : "101",
+      "stop-order"      : "101",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application efp-datastore-query-service --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application efp-datastore-query-service --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep efp-datastore-query-service | awk '{ print $2 }'",
+      "app-group"       : "efp-datastore-service"
+    },
+    {
+      "name"            : "gsm-dollar-adaptor-service",
+      "start-order"     : "102",
+      "stop-order"      : "102",
+      "child-processes" : [],
+      "start"           : "{BOOTSTRAP_DIR}/start-application gsm-dollar-adaptor-service --unblock",
+      "stop"            : "{BOOTSTRAP_DIR}/stop-application gsm-dollar-adaptor-service --block",
+      "check"           : "ps -ef | grep java | grep {ENV_NAME} | grep gsm-dollar-adaptor-service | awk '{ print $2 }'",
+      "app-group"       : "gsm-dollar-adaptor-service"
+    },
+    {
+      "name"            : "referencedata-gf8",
+      "start-order"     : "103",
+      "stop-order"      : "103",
+
+      "child-processes" : ["referencedata-locator-gf8", "referencedata-server-gf8", "account-service-gf8"],
+      "start"           : "",
+      "stop"            : "",
+      "check"           : "",
+      "app-group"       : "referencedata-gf8"
+    },
+    {
+      "name"            : "referencedata-locator-gf8",
+      "start-order"     : "104",
+      "stop-order"      : "104",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-server-gf8/bin/unix.locator.sh start",
+      "stop"            : "{ENV_HOME}/applications/referencedata-server-gf8/bin/unix.locator.sh stop",
+      "check"           : "pgrep -f referencedata-locator-gf8",
+      "app-group"       : "referencedata-locator-gf8"
+    },
+    {
+      "name"            : "referencedata-server-gf8",
+      "start-order"     : "105",
+      "stop-order"      : "105",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/referencedata-server-gf8/bin/referencedata-server.sh start",
+      "stop"            : "{ENV_HOME}/applications/referencedata-server-gf8/bin/referencedata-server.sh stop",
+      "check"           : "pgrep -f com.jpmorgan.ib.efp.referencedata.server.Main",
+      "app-group"       : "referencedata-server-gf8"
+    },
+    {
+      "name"            : "account-service-gf8",
+      "start-order"     : "106",
+      "stop-order"      : "106",
+      "child-processes" : [],
+      "start"           : "{ENV_HOME}/applications/account-service-gf8/bin/account-service-gf8.sh start",
+      "stop"            : "{ENV_HOME}/applications/account-service-gf8/bin/account-service-gf8.sh stop",
+      "check"           : "pgrep -f com.jpmorgan.ib.efp.accountservice.Application",
+      "app-group"       : "account-service-gf8"
+    }
+  ]
+}

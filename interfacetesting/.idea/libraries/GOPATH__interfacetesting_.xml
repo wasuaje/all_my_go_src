@@ -1,0 +1,46 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;interfacetesting&gt;">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../chat" />
+      <root url="file://$PROJECT_DIR$/../pomodoro" />
+      <root url="file://$PROJECT_DIR$/../domainify" />
+      <root url="file://$PROJECT_DIR$/../stones" />
+      <root url="file://$PROJECT_DIR$/../meander" />
+      <root url="file://$PROJECT_DIR$/../thesaurus" />
+      <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../dna2" />
+      <root url="file://$PROJECT_DIR$/../synonyms" />
+      <root url="file://$PROJECT_DIR$/../dna" />
+      <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../sprinkle" />
+      <root url="file://$PROJECT_DIR$/../json_reader" />
+      <root url="file://$PROJECT_DIR$/../ssh" />
+      <root url="file://$PROJECT_DIR$/../gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../goroutines" />
+      <root url="file://$PROJECT_DIR$/../GoTests" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../chat" />
+      <root url="file://$PROJECT_DIR$/../pomodoro" />
+      <root url="file://$PROJECT_DIR$/../domainify" />
+      <root url="file://$PROJECT_DIR$/../stones" />
+      <root url="file://$PROJECT_DIR$/../meander" />
+      <root url="file://$PROJECT_DIR$/../thesaurus" />
+      <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../dna2" />
+      <root url="file://$PROJECT_DIR$/../synonyms" />
+      <root url="file://$PROJECT_DIR$/../dna" />
+      <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../sprinkle" />
+      <root url="file://$PROJECT_DIR$/../json_reader" />
+      <root url="file://$PROJECT_DIR$/../ssh" />
+      <root url="file://$PROJECT_DIR$/../gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../goroutines" />
+      <root url="file://$PROJECT_DIR$/../GoTests" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>

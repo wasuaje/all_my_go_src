@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;goroutines&gt;">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../json_reader" />
+      <root url="file://$PROJECT_DIR$/../GoTests" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../json_reader" />
+      <root url="file://$PROJECT_DIR$/../GoTests" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>
